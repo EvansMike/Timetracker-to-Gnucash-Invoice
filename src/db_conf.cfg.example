@@ -1,0 +1,11 @@
+[database]
+USER = username
+PASSWD = password
+DB = database_name
+DBHOST = database_host
+
+[other]
+FILE = "/path/to/gnucash/account/file"
+CSV_FILE = "/path/to/csv/file_without_extension"
+
+

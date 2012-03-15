@@ -1,0 +1,8 @@
+Timesheet2invoice reads from an Anuko Timetracker database and creates
+a GnuCash invoice for the work done.
+
+It is possibly dangerous to use as it can create mutiple invoices for the
+same work.  Invoices can be recycled in GnuCash however, so all is not lost if
+you run this twice for the same time period.
+
+I'm sure this could be adapted to suit other timsheet databases. 
