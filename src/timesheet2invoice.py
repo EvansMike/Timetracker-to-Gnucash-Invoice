@@ -30,7 +30,7 @@ TODO Do weekly or monthly reports
 TODO If there are no entries, don't create an invoice.
 TODO GUI?
 '''
-
+import platform
 import ConfigParser
 import sys, os
 import MySQLdb
@@ -43,12 +43,17 @@ from gnucash.gnucash_business import Customer, Invoice, Entry
 #def cleanAndSave:
 #  pass
 #  quit()
+# Set up line endings for Windows or Linux.  Others users may have to hack here
+platform = platform.system()
+if platform == 'Windows':
+  LE = "\r\n"
+else: LE = "\n"
 
 DATE_OPENED = None # Most likely todays date
 try: p_number = (sys.argv[1]) # Specify as number on command line
 except: p_number = 3
 try: PERIOD = sys.argv[2].lower()
-except: PERIOD = "m" # Default to a month
+except: PERIOD = "w" # Default to a week
 
 #GnuCash stuff
 IGNORE_LOCK = True
@@ -85,35 +90,34 @@ get_data_sql = "select al_date, al_project_id, al_comment, al_duration \
 get_rate_sql = "select ub_rate from user_bind WHERE ub_id_p=10"
 
 db = MySQLdb.connect(db_host,db_user,db_pass,db_base)
+assert(db != None)
 
 # prepare a cursor object using cursor() method
 cursor = db.cursor()
-#cursor = con.cursor(MySQLdb.cursors.DictCursor) # Example dictionary cursor that I should have used.
-# execute SQL query using execute() method.
-# Fetch a single row using fetchone() method.
+#cursor = db.cursor(MySQLdb.cursors.DictCursor) # Example dictionary cursor that I should have used.
 
 cursor.execute(get_rate_sql)
-data = cursor.fetchone()
+data = cursor.fetchone() # There can be only the one.
 RATE=data[0]
 
 #print type(RATE)
 cursor.execute(get_data_sql,(p_number))
 if int(cursor.rowcount)== 0: # If there are no entries, don't make an invoice.
-  print "\nEmpty report, refusing to create empty invoice.  Quitting.\n\n"
+  print "\nEmpty report, refusing to create empty invoice.  Quitting." + LE
   quit()
 data = cursor.fetchall()
 
 # We create a CSV file for two reasons; for import into a spreadsheet, for tracking useage.
-csv_filename = csv_file + "-"  + PERIOD + str(p_number) + ".csv" # output filename for csv
+csv_filename = csv_file + "_timesheet-"  + PERIOD + str(p_number) + ".csv" # output filename for csv
 # Check if CSV file already exists.  If it does, assume we've run this before and quit
 if not os.path.exists(csv_filename):
   csv_file = open(csv_filename,"w")
 else: # Crude check if we've run this before.  TODO: Could be improved
-  print "\nYou appear to have already run this for this period.\n \
-    I will quit now to give you time to think about what you are doing.\n\n" 
+  print "%sYou appear to have already run this for this period.%s \
+  I will quit now to give you time to think about what you are doing.%s" % (LE,LE,LE)
   quit()
 
-csv_line="date,task,duration,rate\r\n"
+csv_line="date,task,duration,rate" + LE
 csv_file.write(csv_line)
 
 # For direct to gnucash
@@ -152,9 +156,9 @@ for line in data:
   task = line[2]
   duration = str(line[3])
   (h, m, s) = duration.split(':')
-  d_duration = float(int(h) * 3600 + int(m) * 60 + int(s))/3600
+  d_duration = float(int(h) * 3600 + int(m) * 60 + int(s))/3600 # Convert to a decimal fraction
   #print d_duration
-  csv_line=str(date) + "," + task + "," + str(duration) + ","  + str(RATE) + "\r\n"
+  csv_line=str(date) + "," + task + "," + str(duration) + ","  + str(RATE) + LE
   csv_file.write(csv_line)
   # Make an entry per invoice line
   entry = gnucash.gnucash_business.Entry(book, invoice)
