@@ -2,6 +2,8 @@ Timesheet2invoice reads from an Anuko Timetracker database and creates
 a GnuCash invoice for the work done.  Saves entering data twice and avoids
 mistakes &| mis-matches in your timesheets - Invoices.
 
+Shared here on a "Works For Me" basis.
+
 Edit the db_conf.cfg.example and remove the "sample" part to suit your 
 database, filesystem, karmic resonance etc.
 
@@ -13,6 +15,10 @@ at each run.  If the file exists then it quits with a message.  This doesn't
 cover the cases where there are weekly and monthly invoices that have 
 overlapping entries.  That's up to the user to check and be consistent in
 whether invoices are produced weekly or monthly.  The default is weekly.
+
+The CSV file doubles as a record for import into a spreadsheet.  If you don't
+want loads of csv files clogging up your machine then, um, invent another
+way of avoiding duplicate runs and contribute it in the normal way.
 
 To run for a month append month_number and "m" to the command line like:
 ./timesheet2invoice 4 m

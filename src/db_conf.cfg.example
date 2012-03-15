@@ -5,7 +5,9 @@ DB = database_name
 DBHOST = database_host
 
 [other]
+# Path to GnuCash file
 FILE = "/path/to/gnucash/account/file"
+# Where you want your csv files stored.
 CSV_FILE = "/path/to/csv/file_without_extension"
 
 
