@@ -2,10 +2,13 @@ Timesheet2invoice reads from an Anuko Timetracker database and creates
 a GnuCash invoice for the work done.  Saves entering data twice and avoids
 mistakes &| mis-matches in your timesheets - Invoices.
 
+Edit the db_conf.cfg.example and remove the "sample" part to suit your 
+database, filesystem, karmic resonance etc.
+
 It is possibly dangerous to use as it can create mutiple invoices for the
 same work.  Invoices can be recycled in GnuCash however, so all is not lost if
 you run this twice for the same time period.  There is a primitive check
-for duplicate runs in that it chacks for the presence of a csv file, created
+for duplicate runs in that it checks for the presence of a csv file, created
 at each run.  If the file exists then it quits with a message.  This doesn't
 cover the cases where there are weekly and monthly invoices that have 
 overlapping entries.  That's up to the user to check and be consistent in
@@ -19,3 +22,9 @@ application, else hack the source if different.
 
 I'm sure this could be adapted to suit other timsheet databases.  Fork and
 hack at your leasure.
+
+VERY IMPORTANT NOTICE
+Test extensively on a COPY of your account file.  I will not be resposible 
+for data loss, corruption of any sort by your use of this software.  
+
+You have been warned.
